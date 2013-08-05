@@ -73,7 +73,13 @@ describe Mail::DateField do
       Time.stub!(:now).and_return(now)
       Mail::DateField.new.date_time.should eq ::DateTime.parse(now.to_s)
     end
-    
+
+    it "should handle invalid date" do
+      t = nil
+      doing { t = Mail::DateField.new("12 Aug 2009 30:00:02 GMT") }.should_not raise_error
+      t.date_time.should eq nil
+    end
+
   end
 
 end
