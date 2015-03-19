@@ -6,7 +6,12 @@ module Mail
     
     def initialize( string )
       received = Mail::Parsers::ReceivedParser.new.parse(string)
-      @date_time = ::DateTime.parse("#{received.date} #{received.time}")
+      begin
+        @date_time = ::DateTime.parse("#{received.date} #{received.time}")
+      rescue ArgumentError => e
+        raise e unless e.message == "invalid date"
+        @date_time = nil
+      end
       @info = received.info
     end
     
