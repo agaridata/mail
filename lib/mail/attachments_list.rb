@@ -37,10 +37,10 @@ module Mail
     end
 
     def []=(name, value)
-      encoded_name = Mail::Encodings.param_encode(name)
-      default_values = { :content_type => "#{set_mime_type(name)}; filename*=#{encoded_name}",
+      param_name, param_value = Mail::Encodings.param_encode_name_value('filename', name)
+      default_values = { :content_type => "#{set_mime_type(name)}; #{param_name}=#{param_value}",
                          :content_transfer_encoding => "#{guess_encoding}",
-                         :content_disposition => "#{@content_disposition_type}; filename*=#{encoded_name}" }
+                         :content_disposition => "#{@content_disposition_type}; #{param_name}=#{param_value}" }
 
       if value.is_a?(Hash)
 

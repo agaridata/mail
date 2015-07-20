@@ -74,6 +74,17 @@ module Mail
       end
     end
 
+    def Encodings.param_encode_name_value(name, value)
+      case
+      when value.ascii_only? && value =~ TOKEN_UNSAFE
+        return name, %Q{"#{value}"}
+      when value.ascii_only?
+        return name, value
+      else
+        return "#{name}*", RubyVer.param_encode(value)
+      end
+    end
+
     # Decodes a parameter value using URI Escaping.
     #
     # Example:

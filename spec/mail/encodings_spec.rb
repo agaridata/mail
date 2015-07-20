@@ -420,6 +420,33 @@ describe Mail::Encodings do
         expect(Mail::Encodings.param_encode(string)).to eq 'fun'
       end
     end
+
+    it "should encode a string (param name/value)" do
+      string = "This is  あ string"
+      if RUBY_VERSION >= '1.9'
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param*', "utf-8'en'This%20is%20%20%E3%81%82%20string"]
+      else
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param*', "utf8'en'This%20is%20%20%E3%81%82%20string"]
+      end
+    end
+
+    it "should just quote US-ASCII with spaces (param name/value)" do
+      string = "This is even more"
+      if RUBY_VERSION >= '1.9'
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param', '"This is even more"']
+      else
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param', '"This is even more"']
+      end
+    end
+
+    it "should leave US-ASCII without spaces alone (param name/value)" do
+      string = "fun"
+      if RUBY_VERSION >= '1.9'
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param', 'fun']
+      else
+        expect(Mail::Encodings.param_encode_name_value('param', string)).to eq ['param', 'fun']
+      end
+    end
   end
 
   describe "decoding a string and detecting the encoding type" do
