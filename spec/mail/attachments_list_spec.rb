@@ -21,6 +21,18 @@ describe "Attachments" do
     @test_png = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
   end
 
+  describe "filename encoding" do
+    it "should set Content-Disposition filename parameter correctly" do
+      mail = Mail.new
+      mail.attachments['test'] = nil
+      expect(mail.attachments['test'].content_disposition).to eq 'attachment; filename=test'
+      mail.attachments['more test'] = nil
+      expect(mail.attachments['more test'].content_disposition).to eq 'attachment; filename="more test"'
+      mail.attachments['tëst'] = nil
+      expect(mail.attachments['tëst'].content_disposition).to eq "attachment; filename*=utf-8'en't%C3%ABst"
+    end
+  end
+
   describe "from direct content" do
     it "should work" do
       @mail.attachments['test.png'] = @test_png
