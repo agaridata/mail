@@ -4,7 +4,7 @@ module Mail
     MAJOR = 2
     MINOR = 5
     PATCH = 999
-    BUILD = 'edge'
+    BUILD = 'fudge'
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
 
